@@ -1,15 +1,39 @@
-import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import Card from '../components/Card';
+import Picker from '../components/Picker';
+import SwitchTab from '../components/SwtichTab';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+import { CompletedType, CurrentType } from '../constants/Value';
+import { MockOrders, MockOrdersComplete } from '../MockData/MockData';
 
 export default function TabTwoScreen() {
+  const [typeJobs, setTypeJob] = useState<any>(CurrentType)
+
+  const onFunc = () => {
+    Alert.alert('Unfinished function', 'Please try again later!')
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabTwoScreen.tsx" />
+      <SwitchTab onSwitchTab={setTypeJob} tabState={typeJobs} />
+      <View style={styles.padding25}>
+        {typeJobs === CurrentType && <FlatList
+          data={MockOrders}
+          renderItem={({ item }) =>
+            item.id ? <Card card={item} onPress={onFunc} /> : <Picker />
+          }
+          keyExtractor={item => item.id}
+        />}
+        {typeJobs === CompletedType && <FlatList
+          data={MockOrdersComplete}
+          renderItem={({ item }) =>
+            item.id ? <Card card={item} onPress={onFunc} /> : <Picker />
+          }
+          keyExtractor={item => item.id}
+        />}
+      </View>
     </View>
   );
 }
@@ -17,16 +41,9 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'white'
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  padding25: {
+    paddingBottom: 60
   },
 });

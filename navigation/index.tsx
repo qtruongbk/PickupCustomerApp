@@ -1,17 +1,11 @@
-/**
- * If you are not familiar with React Navigation, refer to the "Fundamentals" guide:
- * https://reactnavigation.org/docs/getting-started
- *
- */
-import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { ColorSchemeName } from 'react-native';
+import ConfigHeader from '../components/HeaderTitle';
+import { IconProfile, IconSearch, IconSupport, IconText } from '../components/Icon';
 
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
@@ -38,8 +32,11 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="Root" component={BottomTabNavigator} options={{
+        headerShown: false,
+      }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+      <Stack.Screen name="Login" component={TabOneScreen} options={{ headerShown: false, }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
@@ -54,54 +51,95 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="TabTwo"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
-      }}>
+        tabBarActiveTintColor: '#8FC045',
+      }}
+     >
       <BottomTab.Screen
         name="TabOne"
-        component={TabOneScreen}
+        component={NotFoundScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
+          title: "New Job",
+          tabBarIcon: ({ color }) => <IconSearch color={color} />,
+          headerStyle: {
+            height: 110,
+            borderBottomWidth: 0,
+            shadowRadius: 0,
+            shadowOffset: {
+              height: 0,
+              width: 0
+            },
+          },
+          // headerTitleContainerStyle: {
+          //   top: 0,
+          //   left: 0
+          // },
+          headerTitle: () => <ConfigHeader title="New Job" />,
         })}
       />
       <BottomTab.Screen
         name="TabTwo"
         component={TabTwoScreen}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Jobs",
+          tabBarIcon: ({ color }) => <IconText color={color} />,
+          headerStyle: {
+            height: 110,
+            borderBottomWidth: 0,
+            shadowRadius: 0,
+            shadowOffset: {
+              height: 0,
+              width: 0
+            },
+            marginHorizontal: undefined
+          },
+          headerTitleContainerStyle: {
+            top: undefined,
+            left: undefined,
+            marginHorizontal: undefined
+          },
+          headerTitle: () => <ConfigHeader title="My Activity" />,
         }}
       />
-    </BottomTab.Navigator>
+      <BottomTab.Screen
+        name="Profile"
+        component={NotFoundScreen}
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => <IconProfile color={color} />,
+          headerStyle: {
+            height: 110,
+            borderBottomWidth: 0,
+            shadowRadius: 0,
+            shadowOffset: {
+              height: 0,
+              width: 0
+            },
+          },
+          headerTitle: () => <ConfigHeader title="Profile" />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Support"
+        component={NotFoundScreen}
+        options={{
+          title: "Support",
+          tabBarIcon: ({ color }) => <IconSupport color={color} />,
+          headerStyle: {
+            height: 110,
+            borderBottomWidth: 0,
+            shadowRadius: 0,
+            shadowOffset: {
+              height: 0,
+              width: 0
+            },
+          },
+          headerTitle: () => <ConfigHeader title="Support" />,
+        }}
+      />
+    </BottomTab.Navigator >
   );
-}
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }
